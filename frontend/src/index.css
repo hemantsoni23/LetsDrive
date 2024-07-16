@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modal background */
+.bg-smoke-light {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+@layer base {
+    body {
+        @apply leading-relaxed;
+    }
+
+    .page {
+        @apply w-full h-full mt-6;
+    }
+
+
+}
+
+@layer utilities {
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+    }
+}
