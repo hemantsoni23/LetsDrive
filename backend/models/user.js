@@ -39,7 +39,10 @@ const User = sequelize.define('User', {
     status: {
         type: DataTypes.STRING,
         defaultValue: 'active'
-    }
+    },
+    address: {
+        type: DataTypes.STRING,
+    },
 }, {
     tableName: 'users',
     createdAt: false,

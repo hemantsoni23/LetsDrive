@@ -25,7 +25,7 @@ const register = async (req, res) => {
         const token = jwt.sign(authUser, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(200).json({ message: 'User registered successfully', token });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to register user' });
+        res.status(500).json({ error: 'User Already Exist !!' });
     }
 };
 
@@ -75,6 +75,40 @@ const profile = async (req, res) => {
         res.status(500).json({ error:error });
     }
 };
+
+//Update user profile route
+const updateProfile = async (req, res) => {
+    const { first_name, last_name, phone_number, dob, address } = req.body;
+
+    // Add validation for email, first_name, last_name, phone_number, dob
+    if (!first_name || !last_name || !phone_number || !dob) {
+        return res.status(400).json({ error: 'Please provide all required fields' });
+    }
+
+    try {
+        // Find the user based on req.user.email
+        const user = await User.findOne({ where: { email: req.user.email } });
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Update the user's profile
+        user.first_name = first_name;
+        user.last_name = last_name;
+        user.phone_number = phone_number;
+        user.dob = new Date(dob);
+        user.address = address;
+
+        await user.save();
+
+        // Return a success message
+        res.status(200).json({ message: 'User profile updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update user profile' });
+    }
+}
 
 // Controller for resetting user password
 const resetPassword = async (req, res) => {
@@ -154,6 +188,7 @@ module.exports = {
     register,
     login,
     profile,
+    updateProfile,
     resetPassword,
     getAllUsers,
     updateStatus,

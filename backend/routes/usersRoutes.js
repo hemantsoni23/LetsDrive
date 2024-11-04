@@ -12,6 +12,9 @@ router.post('/login', userControllers.login);
 // User profile route
 router.get('/profile', authUser, userControllers.profile);
 
+// Update user profile route
+router.put('/update-profile', authUser, userControllers.updateProfile);
+
 // Reset password route
 router.post('/reset-password', authUser, userControllers.resetPassword);
 
