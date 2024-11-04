@@ -1,12 +1,13 @@
 // MockQuizModal.jsx
 import React, { useState } from 'react';
-import Modal from 'react-modal';
 
-const MockQuizModal = ({ isOpen, onRequestClose, courses }) => {
+const MockQuizModal = ({ isOpen, onClose, courses }) => {
   const [licenseType, setLicenseType] = useState('');
   const [ageGroup, setAgeGroup] = useState('');
   const [experience, setExperience] = useState('');
   const [hasLicense, setHasLicense] = useState('');
+  
+  if (!isOpen) return null;
 
   const handleQuizSubmit = () => {
     // Logic to recommend a course based on the quiz results
@@ -29,13 +30,20 @@ const MockQuizModal = ({ isOpen, onRequestClose, courses }) => {
       alert('No suitable course found based on your inputs.');
     }
     
-    onRequestClose();
+    onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Mock Quiz Modal">
-      <div className="p-8">
+    <div className='fixed inset-0 z-50 overflow-auto flex justify-center items-center'>
+      <div onClick={onClose} className=' h-full w-full bg-black bg-opacity-50'></div>
+      <div className="absolute bg-white w-4/5 h-4/5 p-8">
         <h2 className="text-3xl font-bold mb-4">Mock Quiz</h2>
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-600 hover:text-red-600 text-2xl font-bold"
+        >
+          &times;
+        </button>
         <div className="mb-4">
           <label className="block mb-2">Which license type are you interested in?</label>
           <select 
@@ -94,7 +102,7 @@ const MockQuizModal = ({ isOpen, onRequestClose, courses }) => {
           Submit
         </button>
       </div>
-    </Modal>
+    </div>
   );
 };
 

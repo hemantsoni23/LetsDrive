@@ -16,6 +16,7 @@ import SignUp from '../components/SignUp';
 import Profile from '../UserDashboard/Profile';
 import UserDashboard from '../UserDashboard/UserDashboard';
 import PrivateRoute from '../components/ProtectRoutes';
+import Quiz from '../components/Quiz/Quiz';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,8 @@ const router = createBrowserRouter([
       { path: '/', element: <Home /> },
       { path: '/learnToDrive', element: <Courses /> },
       { path: '/getYourLicense', element: <License /> },
+      { path: '/quiz', element: <Quiz /> },
+      
     ],
   },
   {

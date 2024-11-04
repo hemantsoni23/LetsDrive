@@ -1,5 +1,5 @@
-import { FaBars, FaTimes } from 'react-icons/fa';
-import React, { useState, useContext } from 'react';
+import { FaBars } from 'react-icons/fa';
+import React, { useContext } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext/AuthProvider';
 import NavBar from '../components/NavBar';

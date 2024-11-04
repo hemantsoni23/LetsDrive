@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <>
       <Banner />
-      <div className="overflow-hidden h-full space-y-16">
+      <div className=" h-full space-y-16">
         <AboutUs />
         <KeyBenefits />
         <Courses />

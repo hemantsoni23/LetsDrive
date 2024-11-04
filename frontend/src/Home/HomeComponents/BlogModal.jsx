@@ -4,8 +4,9 @@ const BlogModal = ({ isOpen, onClose, blog }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div className="fixed inset-0 z-50 overflow-auto flex justify-center items-center">
+      <div onClick={onClose} className='absolute h-full w-full bg-black bg-opacity-50'></div>
+      <div className="relative bg-white p-6 rounded-lg shadow-lg w-4/5 h-2/5 z-100">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-600 hover:text-red-600 text-2xl font-bold"

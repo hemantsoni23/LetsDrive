@@ -1,9 +1,11 @@
 // License.jsx
 import React from 'react';
 import FAQs from '../components/FAQs';
-import RoadSignSlider from '../components/RoadSignSlider';
+import { useNavigate } from 'react-router-dom';
+// import RoadSignSlider from '../components/RoadSignSlider';
 
 const License = () => {
+  const navigate = useNavigate();
   const licenseFAQs = [
     { question: "How do I apply for a learner's license?", answer: "To apply for a learner's license, you need to fill out the application form available on our website and submit the necessary documents." },
     { question: "What are the eligibility criteria for a learner's license?", answer: "You must be at least 18 years old and pass a preliminary test on traffic rules and signs to be eligible for a learner's license." },
@@ -13,13 +15,13 @@ const License = () => {
   ];
 
   return (
-    <div className="min-h-screen mt-10">
+    <div className="min-h-screen mt-0">
       <section className="p-8 bg-white shadow-md rounded-lg mb-8">
         <h2 className="text-3xl font-semibold mb-4">Learner License Registration (LLR)</h2>
         <p className="text-lg mb-4">To register for a learner's license, you must complete the online application form and submit the required documents. The process includes a preliminary test on traffic rules and regulations.</p>
         <div className="flex gap-4">
           <button className="bg-blue-500 uppercase text-white py-2 px-4 rounded-lg">Get a Learner License</button>
-          <button className="bg-gray-500 uppercase text-white py-2 px-4 rounded-lg">Let's Start Mock LLR Test</button>
+          <button className="bg-gray-500 uppercase text-white py-2 px-4 rounded-lg" onClick={()=>navigate('/quiz')}>Let's Start Mock LLR Test</button>
         </div>
       </section>
 
