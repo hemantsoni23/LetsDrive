@@ -1,40 +1,51 @@
 // router.jsx
+import React, { Suspense, lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
-import Home from '../Home/Home';
-import Courses from '../Courses/Courses';
-import License from '../License/License';
-import AdminDashboard from '../AdminDashboard/AdminDashboard';
-import ManageCourses from '../AdminDashboard/ManageCourses';
-import LearnerLicenseApplicants from '../AdminDashboard/LearnerLicenseApplicants';
-import UserManagement from '../AdminDashboard/UserManagement';
-import Login from '../components/Login';
-import EnquiriesManagement from '../AdminDashboard/EnquiriesManagement';
-import AddCourse from '../AdminDashboard/AddCourses';
-import EditCourse from '../AdminDashboard/EditCourses';
-import SignUp from '../components/SignUp';
-import Profile from '../UserDashboard/Profile';
-import UserDashboard from '../UserDashboard/UserDashboard';
-import PrivateRoute from '../components/ProtectRoutes';
-import Quiz from '../components/Quiz/Quiz';
+import Loader from '../components/Loader';
+const Home = lazy(() => import('../Home/Home'));
+const Courses = lazy(() => import('../Courses/Courses'));
+const License = lazy(() => import('../License/License'));
+const AdminDashboard = lazy(() => import ('../AdminDashboard/AdminDashboard'));
+const ManageCourses = lazy(() => import( '../AdminDashboard/ManageCourses'));
+const LearnerLicenseApplicants = lazy(() => import( '../AdminDashboard/LearnerLicenseApplicants'));
+const UserManagement = lazy(() => import( '../AdminDashboard/UserManagement'));
+const Login = lazy(() => import( '../components/Login'));
+const EnquiriesManagement = lazy(() => import( '../AdminDashboard/EnquiriesManagement'));
+const AddCourse = lazy(() => import( '../AdminDashboard/AddCourses'));
+const EditCourse = lazy(() => import( '../AdminDashboard/EditCourses'));
+const SignUp = lazy(() => import( '../components/SignUp'));
+const Profile = lazy(() => import( '../UserDashboard/Profile'));
+const UserDashboard = lazy(() => import( '../UserDashboard/UserDashboard'));
+const PrivateRoute = lazy(() => import( '../components/ProtectRoutes'));
+const Quiz = lazy(() => import('../components/Quiz/Quiz'));
+const AboutUs = lazy(() => import('../components/AboutUs'));
+const ContactUs = lazy(() => import('../components/ContactUs'));
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <Suspense fallback={<Loader />}>
+        <App />
+      </Suspense>
+    ),
     children: [
       { path: '/', element: <Home /> },
       { path: '/learnToDrive', element: <Courses /> },
       { path: '/getYourLicense', element: <License /> },
       { path: '/quiz', element: <Quiz /> },
-      
+      { path: '/about', element: <Suspense fallback={<Loader />}><AboutUs /></Suspense> },
+      { path: '/contact', element: <Suspense fallback={<Loader />}><ContactUs /></Suspense> },
     ],
   },
   {
     path: '/admin',
     element: (
       <PrivateRoute>
-        <AdminDashboard />
+        <Suspense fallback={<Loader />}>
+          <AdminDashboard />
+        </Suspense>  
       </PrivateRoute>
     ),
     children: [
@@ -47,17 +58,19 @@ const router = createBrowserRouter([
       { path: 'enquiries-management', element: <EnquiriesManagement /> },
     ],
   },
-  { path: '/signup', element: <SignUp /> },
-  { path: '/login', element: <Login /> },
+  { path: '/signup', element: <Suspense fallback={<Loader />}><SignUp /></Suspense> },
+  { path: '/login', element: <Suspense fallback={<Loader />}><Login /></Suspense> },
   {
     path: '/profile',
     element: (
       <PrivateRoute>
-        <UserDashboard />
+        <Suspense fallback={<Loader />}>
+          <UserDashboard />
+        </Suspense>  
       </PrivateRoute>
     ),
     children: [
-      { path: '', element: <Profile /> },
+      { path: '', element: <Suspense fallback={<Loader />}><Profile /></Suspense> },
       { path: 'user-progress', element: <div>User Progress Component</div> },
       { path: 'license-status', element: <div>License Status Component</div> },
       { path: 'mock-test-results', element: <div>Mock Test Results Component</div> },

@@ -43,6 +43,9 @@ const User = sequelize.define('User', {
     address: {
         type: DataTypes.STRING,
     },
+    refresh_token:{
+        type:DataTypes.STRING
+    },
 }, {
     tableName: 'users',
     createdAt: false,

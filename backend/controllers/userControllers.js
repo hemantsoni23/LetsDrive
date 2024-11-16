@@ -16,14 +16,23 @@ const register = async (req, res) => {
         // Password hashing
         const hashPass = await bcrypt.hash(password, 10);
 
+        const authUser = { email: email, role:'user' };
+         // Generate tokens
+        const accessToken = jwt.sign(authUser, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const refreshToken = jwt.sign(authUser, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+
         // Example code to create a new user using the User model
         const newUser = await User.create({
             email,
             password: hashPass,
+            refresh_token: refreshToken
         });
-        const authUser = { email: newUser.email, role:'user' };
-        const token = jwt.sign(authUser, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ message: 'User registered successfully', token });
+
+        // Set tokens in cookies
+        res.cookie('accessToken', accessToken, { httpOnly: true, secure:true, maxAge: 60 * 60 * 1000 });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure:true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
+        res.status(200).json({ message: 'User registered successfully' });
     } catch (error) {
         res.status(500).json({ error: 'User Already Exist !!' });
     }
@@ -32,7 +41,7 @@ const register = async (req, res) => {
 // Controller for user login
 const login = async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
 
     // Add validation for email and password
     if (!email || !password) {
@@ -51,8 +60,20 @@ const login = async (req, res) => {
             return res.status(400).json({ error: 'Incorrect password' });
         }
         const authUser = { email: existingUser.email, role:existingUser.role };
-        const token = jwt.sign(authUser, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ message: 'User logged in successfully', token });
+
+        // Generate tokens
+        const accessToken = jwt.sign(authUser, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const refreshToken = jwt.sign(authUser, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+
+        // Store refresh token in database
+        existingUser.refresh_token = refreshToken;
+        await existingUser.save();
+
+        // Set tokens in cookies
+        res.cookie('accessToken', accessToken, { maxAge: 60 * 60 * 1000 });
+        res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000 });
+        res.cookie('role', existingUser.role, { maxAge: 7 * 24 * 60 * 60 * 1000 });
+        res.status(200).json({ message: 'User logged in successfully' });
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -184,6 +205,53 @@ const checkAdmin = async (req, res) => {
     }
 }
 
+const refreshToken = async (req, res) => {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) return res.status(403).json({ error: 'Refresh token required' });
+
+    try {
+        const user = await User.findOne({ where: { refresh_token: refreshToken } });
+        if (!user) return res.status(403).json({ error: 'Invalid refresh token' });
+
+        // Verify refresh token
+        jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, authUser) => {
+            if (err) return res.status(403).json({ error: 'Token expired' });
+
+            // Generate a new access token
+            const newAccessToken = jwt.sign({ email: authUser.email, role: authUser.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.cookie('accessToken', newAccessToken, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+            res.cookie('role', authUser.role, { maxAge: 7 * 24 * 60 * 60 * 1000 });
+            res.cookie('email', authUser.email, { maxAge: 7 * 24 * 60 * 60 * 1000 });
+            res.status(200).json({ message: 'Token refreshed' });
+        });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+
+const logout = async (req, res) => {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) return res.status(400).json({ error: 'No token found' });
+
+        try {
+        const user = await User.findOne({ where: { refresh_token: refreshToken } });
+        if (user) {
+            user.refresh_token = null;
+            await user.save();
+        }
+
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+
+
+
 module.exports = {
     register,
     login,
@@ -192,5 +260,7 @@ module.exports = {
     resetPassword,
     getAllUsers,
     updateStatus,
-    checkAdmin
+    checkAdmin,
+    refreshToken,
+    logout
 };

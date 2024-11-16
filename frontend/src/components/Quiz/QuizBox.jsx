@@ -1,41 +1,57 @@
 import React, { useState } from 'react';
 
-const QuizBox = (props) => {
-    const [selected, setSelected] = useState(props.answer ? props.answer : null);
-    const handleSelection = (option) => {
-        setSelected(option);
-    }
-    return (
-        <div
-            className='w-3/4 h-full bg-white self-end flex flex-col items-center justify-center'>
-            <h1 className='text-xl font-semibold mb-4'>{props.question}</h1>
-            <div
-                className='flex flex-wrap justify-between w-3/5'
-            >
-                {
-                    props.options.map((option, index) => (
-                        <div className={`${(selected === option) ? "border-2 border-green-400" : "border border-black"} hover:scale-105 rounded-xl p-5 m-2 cursor-pointer text-xl`} key={index} onClick={() => handleSelection(option)}>{String.fromCharCode(index + 1 + 64) + '. ' + option}</div>        
-                    ))
-                }
-            </div>
-            <div className='m-5'>
-                {
-                    props.current !== 0 && (
-                    <button
-                        className='text-lg border border-black rounded-lg font-semibold p-5 m-2 cursor-pointer bg-[#1d4ed8] text-white'    
-                        onClick={props.prev}
-                    >
-                        Prev.
-                    </button>
-                    )
-                }
-                {
-                    (props.current < props.length - 1) ? (<button className='text-lg border border-black rounded-lg font-medium p-5 m-2 cursor-pointer bg-[#1d4ed8] text-white' onClick={() => props.next(selected)}>Next</button>) : (
-                        <button className='text-lg border border-black rounded-lg font-medium p-5 m-2 cursor-pointer bg-[#1d4ed8] text-white' onClick={() => props.submit()}>Submit</button>)
-                }
-            </div>
-        </div>
-    );
-}
+const QuizBox = ({ question, options, next, prev, current, length, submit }) => {
+  const [selected, setSelected] = useState(null);
+
+  const handleSelection = (option) => {
+    setSelected(option);
+  };
+
+  return (
+    <div className="w-3/4 h-full bg-white p-6 shadow-lg flex flex-col items-center overflow-auto">
+      <h1 className="text-2xl font-semibold mb-6 text-gray-700">{question}</h1>
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        {options.map((option, index) => (
+          <div
+            key={index}
+            className={`w-full p-4 rounded-lg cursor-pointer text-lg text-center transition-transform border ${
+              selected === option
+                ? 'bg-green-100 border-green-500'
+                : 'bg-gray-100 border-gray-300 hover:bg-gray-200'
+            }`}
+            onClick={() => handleSelection(option)}
+          >
+            {String.fromCharCode(65 + index) + '. ' + option}
+          </div>
+        ))}
+      </div>
+      <div className="flex gap-4">
+        {current > 0 && (
+          <button
+            className="px-6 py-2 text-lg font-medium bg-blue-600 text-white rounded-lg shadow-md transition duration-300 hover:bg-blue-700"
+            onClick={prev}
+          >
+            Previous
+          </button>
+        )}
+        {current < length - 1 ? (
+          <button
+            className="px-6 py-2 text-lg font-medium bg-blue-600 text-white rounded-lg shadow-md transition duration-300 hover:bg-blue-700"
+            onClick={() => next(selected)}
+          >
+            Next
+          </button>
+        ) : (
+          <button
+            className="px-6 py-2 text-lg font-medium bg-green-600 text-white rounded-lg shadow-md transition duration-300 hover:bg-green-700"
+            onClick={submit}
+          >
+            Submit
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default QuizBox;

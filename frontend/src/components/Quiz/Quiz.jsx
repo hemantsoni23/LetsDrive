@@ -5,44 +5,44 @@ import { useNavigate } from 'react-router-dom';
 
 const QuizQuestions = [
   {
-    question: "What is the capital of France?",
-    options: ["Paris", "London", "Berlin", "Madrid"]
+    question: "What should you do when you see a red traffic light?",
+    options: ["Stop", "Proceed with caution", "Speed up", "Turn left"]
   },
   {
-    question: "Which planet is known as the Red Planet?",
-    options: ["Earth", "Mars", "Jupiter", "Saturn"]
+    question: "What does a flashing yellow traffic light indicate?",
+    options: ["Proceed with caution", "Stop", "Yield", "No parking"]
   },
   {
-    question: "Who wrote 'To Kill a Mockingbird'?",
-    options: ["Harper Lee", "Jane Austen", "Mark Twain", "J.K. Rowling"]
+    question: "What is the minimum age requirement to obtain a learner's driving license?",
+    options: ["16 years", "18 years", "20 years", "21 years"]
   },
   {
-    question: "What is the largest ocean on Earth?",
-    options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"]
+    question: "When should you use your turn signals?",
+    options: ["When changing lanes", "When turning", "When merging", "All of the above"]
   },
   {
-    question: "What is the smallest prime number?",
-    options: ["1", "2", "3", "5"]
+    question: "What is the safe following distance rule in good driving conditions?",
+    options: ["3 seconds", "1 second", "5 seconds", "7 seconds"]
   },
   {
-    question: "In which year did the Titanic sink?",
-    options: ["1912", "1905", "1915", "1920"]
+    question: "Who has the right of way at a four-way stop?",
+    options: ["The first car to arrive", "Cars on the right", "Cars turning left", "Cars going straight"]
   },
   {
-    question: "What is the chemical symbol for Gold?",
-    options: ["Au", "Ag", "Fe", "Hg"]
+    question: "What does a solid white line between lanes mean?",
+    options: ["No lane changing", "Speed up", "Parking allowed", "Prepare to stop"]
   },
   {
-    question: "Who painted the Mona Lisa?",
-    options: ["Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh", "Claude Monet"]
+    question: "What is the main purpose of a roundabout?",
+    options: ["Reduce speed and control traffic flow", "Stop traffic", "Parking area", "Emergency vehicle passage"]
   },
   {
-    question: "What is the tallest mountain in the world?",
-    options: ["Mount Everest", "K2", "Kangchenjunga", "Lhotse"]
+    question: "How should you react to an emergency vehicle with flashing lights behind you?",
+    options: ["Pull over to the right and stop", "Speed up", "Turn off your lights", "Continue driving normally"]
   },
   {
-    question: "What is the longest river in the world?",
-    options: ["Nile", "Amazon", "Yangtze", "Mississippi"]
+    question: "When is it safe to drive through a pedestrian crossing?",
+    options: ["When there are no pedestrians", "Any time", "When the light is green", "Only if you are in a hurry"]
   }
 ];
 
@@ -108,10 +108,14 @@ const Quiz = () => {
   };
 
   return (
-    <div className='w-full h-full flex'>
+    <div className="w-screen h-screen flex bg-gray-100">
       {quizStarted ? (
-        <>
-          <SideBarQuiz Questions={QuizQuestions} answers={answers} handleMove={handleMove} />
+        <div className="w-full h-full flex">
+          <SideBarQuiz
+            Questions={QuizQuestions}
+            answers={answers}
+            handleMove={handleMove}
+          />
           <QuizBox
             key={currentQuestion}
             question={`Q ${currentQuestion + 1}. ${QuizQuestions[currentQuestion].question}`}
@@ -122,12 +126,20 @@ const Quiz = () => {
             length={QuizQuestions.length}
             submit={handleSubmit}
           />
-        </>
+        </div>
       ) : (
-        <div className='container mx-auto flex justify-center items-center'>
+        <div className="w-full h-screen flex flex-col justify-center items-center bg-gray-50">
+          <div className="text-center mb-6 text-gray-700">
+            <p className="text-lg font-semibold">Instructions:</p>
+            <ul className="list-disc text-left mt-2 ml-6">
+              <li>All questions are multiple-choice with a single answer.</li>
+              <li>Attempting to change tabs or exiting fullscreen will close the quiz automatically.</li>
+              <li>Make sure to complete all questions within the quiz time limit.</li>
+            </ul>
+          </div>
           <button
             onClick={enterFullscreen}
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300'
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition duration-300"
           >
             Start Quiz
           </button>

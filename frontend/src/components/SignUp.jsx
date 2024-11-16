@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../AuthContext/AuthProvider';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/AuthSlice';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ const SignUp = () => {
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
-  const { login } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -48,12 +49,14 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_ROUTE}/users/register`, {
+      await axios.post(`${process.env.REACT_APP_API_ROUTE}/users/register`, {
         email,
         password,
-      });
+      },
+      { withCredentials: true }
+      );
 
-      login(response.data.token,email);
+      dispatch(login(email));
       navigate('/profile');
     } catch (error) {
       setError(error.response?.data?.error || 'Registration failed');

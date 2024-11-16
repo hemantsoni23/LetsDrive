@@ -27,4 +27,10 @@ router.put('/reverse-status/:id', userControllers.updateStatus);
 //Check user == admin or not
 router.get('/check-admin', authUser, userControllers.checkAdmin);
 
+// Refresh token route
+router.get('/refresh-token', userControllers.refreshToken);
+
+//Logout route
+router.get('/logout', userControllers.logout);
+
 module.exports = router;

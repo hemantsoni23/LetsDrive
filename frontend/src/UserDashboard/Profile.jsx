@@ -1,13 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import EditDetailsModal from './EditDetailsModal';
 import ChangePasswordModal from './ChangePasswordModal';
-import { AuthContext } from '../AuthContext/AuthProvider';
+import { useSelector } from 'react-redux';
 
 const Profile = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false); 
-  const { userEmail } = useContext(AuthContext);
+  const userEmail = useSelector((state) => state.auth.userEmail);
 
   const toggleEditModal = () => setIsEditModalOpen(!isEditModalOpen);
   const toggleChangePasswordModal = () => setIsChangePasswordModalOpen(!isChangePasswordModalOpen);

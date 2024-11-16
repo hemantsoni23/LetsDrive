@@ -1,16 +1,17 @@
 import { FaBars } from 'react-icons/fa';
-import React, { useContext } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import {logout} from '../redux/AuthSlice';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../AuthContext/AuthProvider';
 import NavBar from '../components/NavBar';
 
 const UserDashboard = () => {
-  const { logout } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    logout();
+    dispatch(logout());
     navigate('/');
   };
 

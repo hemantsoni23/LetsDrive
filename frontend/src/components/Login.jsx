@@ -1,14 +1,16 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../AuthContext/AuthProvider';
+import Cookies from 'js-cookie';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/AuthSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -35,24 +37,23 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_ROUTE}/users/login`, {
-        email,
-        password,
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_ROUTE}/users/login`,
+        { email, password },
+        { withCredentials: true }
+      );
 
-      login(response.data.token, email);
 
-      const roleResponse = await axios.get(`${process.env.REACT_APP_API_ROUTE}/users/check-admin`, {
-        headers: {
-          authorization: `Bearer ${response.data.token}`,
-        },
-      });
+      dispatch(login(email));
 
-      if (roleResponse.data) {
+      // const roleResponse = await axios.get(`${process.env.REACT_APP_API_ROUTE}/users/check-admin`, { withCredentials: true });
+
+      if (Cookies.get('role') === 'admin') {
         navigate('/admin');
       } else {
         navigate('/profile');
       }
+      
     } catch (error) {
       setError(error.response?.data?.error || 'Login failed');
     }

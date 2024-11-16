@@ -1,15 +1,18 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBarsStaggered, FaXmark, FaUser } from 'react-icons/fa6';
 import { FaUserCircle, FaSignInAlt } from "react-icons/fa";
-import { AuthContext } from '../AuthContext/AuthProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../redux/AuthSlice';
 const logo = require("../assets/logo.png");
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { authToken, logout } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const authToken = useSelector(state => state.auth.authToken);
+  console.log(authToken);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -52,7 +55,7 @@ const NavBar = () => {
     { path: '/profile/user-progress', label: 'User Progress' },
     { path: '/profile/license-status', label: 'License Status' },
     { path: '/profile/mock-test-results', label: 'Mock Test Results' },
-    { label: 'Logout', path: '/', onClick: logout }
+    { label: 'Logout', path: '/', onClick: () => dispatch(logout()) }
   ];
 
   return (

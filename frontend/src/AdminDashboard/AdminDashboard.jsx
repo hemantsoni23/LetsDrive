@@ -1,11 +1,12 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { FaBars, FaTimes } from 'react-icons/fa';
-import { AuthContext } from '../AuthContext/AuthProvider';
+import { useDispatch } from 'react-redux';
+import {logout} from '../redux/AuthSlice';
 const logo = require('../assets/white_logo.png');
 
 const AdminDashboard = () => {
-  const { logout } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate(); // Initialize navigate
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = () => {
-    logout(); // Call the logout function from context
+    dispatch(logout()); // Call the logout function from context
     navigate('/login'); // Use navigate to redirect to login page
   };
 
