@@ -1,4 +1,3 @@
-// ContactUs.jsx
 import React, { useState } from 'react';
 
 const ContactUs = () => {
@@ -12,7 +11,6 @@ const ContactUs = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Submit form logic here (API or email integration)
     setSubmitted(true);
   };
 

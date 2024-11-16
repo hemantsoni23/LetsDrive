@@ -43,10 +43,7 @@ const Login = () => {
         { withCredentials: true }
       );
 
-
       dispatch(login(email));
-
-      // const roleResponse = await axios.get(`${process.env.REACT_APP_API_ROUTE}/users/check-admin`, { withCredentials: true });
 
       if (Cookies.get('role') === 'admin') {
         navigate('/admin');

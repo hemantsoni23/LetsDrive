@@ -23,7 +23,7 @@ function App() {
       <ScrollTop />
       <NavBar />
       <Suspense fallback={<Loader />}>
-        <div className="min-h-screen pt-20"> {/* Adjusted padding to prevent content overlap */}
+        <div className="min-h-screen pt-20"> 
           <Outlet />
         </div>
       </Suspense>
