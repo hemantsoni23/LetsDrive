@@ -32,7 +32,8 @@ const PORT = process.env.PORT;
 app.use('/api/v1/users',require("./routes/usersRoutes"));
 app.use('/api/v1/courses', require("./routes/coursesRoutes"));
 app.use('/api/v1/license', require("./routes/licenseRoutes"));
-
+app.use('/api/v1/payment', require("./routes/paymentRoutes"));
+app.use('/api/v1/userCourse', require("./routes/userCourseRoutes"));
 
 app.get('/', (req, res) => {
     res.status(200).send('Hello World!')

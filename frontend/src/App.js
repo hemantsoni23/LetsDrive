@@ -9,6 +9,8 @@ import { refreshToken } from "./redux/AuthSlice";
 import {login} from "./redux/AuthSlice";
 import Cookies from "js-cookie";
 import Loader from "./components/Loader";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,6 +30,7 @@ function App() {
         </div>
       </Suspense>
       <Footer />
+      <ToastContainer position="top-right" autoClose={4000} />
     </React.Fragment>
   );
 }
