@@ -27,12 +27,8 @@ const register = async (req, res) => {
             password: hashPass,
             refresh_token: refreshToken
         });
-
-        // Set tokens in cookies
-        res.cookie('accessToken', accessToken, { httpOnly: true, secure:true, maxAge: 60 * 60 * 1000 });
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure:true, maxAge: 7 * 24 * 60 * 60 * 1000 });
-
-        res.status(200).json({ message: 'User registered successfully' });
+        
+        res.status(200).json({accessToken, refreshToken, message: 'User registered successfully' });
     } catch (error) {
         res.status(500).json({ error: 'User Already Exist !!' });
     }
@@ -69,11 +65,7 @@ const login = async (req, res) => {
         existingUser.refresh_token = refreshToken;
         await existingUser.save();
 
-        // Set tokens in cookies
-        res.cookie('accessToken', accessToken, { maxAge: 60 * 60 * 1000 });
-        res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000 });
-        res.cookie('role', existingUser.role, { maxAge: 7 * 24 * 60 * 60 * 1000 });
-        res.status(200).json({ message: 'User logged in successfully' });
+        res.status(200).json({ accessToken:accessToken, refreshToken:refreshToken, role:existingUser.role, message: 'User logged in successfully' });
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -206,7 +198,7 @@ const checkAdmin = async (req, res) => {
 }
 
 const refreshToken = async (req, res) => {
-    const { refreshToken } = req.cookies;
+    const { refreshToken } = req.body;
 
     if (!refreshToken) return res.status(403).json({ error: 'Refresh token required' });
 

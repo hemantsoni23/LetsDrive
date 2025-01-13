@@ -8,10 +8,16 @@ const Profile = () => {
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false); 
   const userEmail = useSelector((state) => state.auth.userEmail);
+  const userDetails = useSelector((state) => state.auth.userDetails);
+  const dob = new Date(userDetails.dob).toLocaleDateString('en-GB');
 
   const toggleEditModal = () => setIsEditModalOpen(!isEditModalOpen);
   const toggleChangePasswordModal = () => setIsChangePasswordModalOpen(!isChangePasswordModalOpen);
 
+  if (userDetails === null) {
+    return <div>Loading...</div>;
+  }
+  
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-semibold mb-4">Profile</h1>
@@ -29,15 +35,15 @@ const Profile = () => {
         </div>
         <div className="flex flex-col space-y-2">
           <label className="font-semibold">Name</label>
-          <span>John Doe</span>
+          <span>{userDetails.first_name + ' ' + userDetails.last_name}</span>
         </div>
         <div className="flex flex-col space-y-2">
           <label className="font-semibold">Phone</label>
-          <span>123-456-7890</span>
+          <span>{userDetails.phone_number}</span>
         </div>
         <div className="flex flex-col space-y-2">
           <label className="font-semibold">DOB</label>
-          <span>01/01/1990</span>
+          <span>{dob}</span>
         </div>
         <div className="flex flex-wrap space-x-4 mt-4">
           <button onClick={toggleEditModal} className="bg-blue-500 text-white rounded-md px-4 py-2">Edit Details</button>

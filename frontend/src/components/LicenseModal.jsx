@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
 
 const LicenseModal = ({ isOpen, onClose }) => {
   const { authToken } = useSelector((state) => state.auth);
@@ -27,7 +28,9 @@ const LicenseModal = ({ isOpen, onClose }) => {
     const checkUser = async () => {
       try {
         const { data: userPayments } = await axios.get(`${process.env.REACT_APP_API_ROUTE}/payment/`, {
-            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${Cookies.get('accessToken')}}`,
+            },
         });
 
         const alreadyApplied = userPayments.some(
@@ -83,7 +86,11 @@ const LicenseModal = ({ isOpen, onClose }) => {
                       description: 'Learner License Application',
                       failure_reason,
                   },
-                  { withCredentials: true }
+                {
+                  headers: {
+                    Authorization: `Bearer ${Cookies.get('accessToken')}}`,
+                  },
+                }
               );
 
               if (status === "success") {
@@ -120,11 +127,17 @@ const LicenseModal = ({ isOpen, onClose }) => {
       const paymentResponse = await axios.post(
         `${process.env.REACT_APP_API_ROUTE}/payment/`,
         { amount: amount * 100, currency: 'INR', receipt: `receipt_${Date.now()}`, customization },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get('accessToken')}}`,
+          },
+        }
       );
 
       const userResponse = await axios.get(`${process.env.REACT_APP_API_ROUTE}/users/profile`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${Cookies.get('accessToken')}}`,
+        },
       });
 
       initializePayment(paymentResponse.data.order_id, userResponse.data);

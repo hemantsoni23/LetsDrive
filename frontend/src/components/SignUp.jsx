@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { login } from '../redux/AuthSlice';
+import { login, fetchUserDetails } from '../redux/AuthSlice';
+import Cookies from 'js-cookie';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -49,14 +50,15 @@ const SignUp = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_ROUTE}/users/register`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_ROUTE}/users/register`, {
         email,
         password,
       },
-      { withCredentials: true }
       );
-
+      Cookies.set('accessToken', response.data.accessToken);
+      Cookies.set('refreshToken', response.data.refreshToken);
       dispatch(login(email));
+      dispatch(fetchUserDetails());
       navigate('/profile');
     } catch (error) {
       setError(error.response?.data?.error || 'Registration failed');

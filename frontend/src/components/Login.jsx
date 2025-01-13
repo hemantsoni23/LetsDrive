@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
-import { login } from '../redux/AuthSlice';
+import { login, fetchUserDetails } from '../redux/AuthSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -37,13 +37,16 @@ const Login = () => {
     }
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `${process.env.REACT_APP_API_ROUTE}/users/login`,
         { email, password },
-        { withCredentials: true }
       );
 
+      Cookies.set('accessToken', response.data.accessToken);
+      Cookies.set('refreshToken', response.data.refreshToken);
+      Cookies.set('role', response.data.role);
       dispatch(login(email));
+      dispatch(fetchUserDetails());
 
       if (Cookies.get('role') === 'admin') {
         navigate('/admin');

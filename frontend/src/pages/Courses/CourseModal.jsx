@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const CourseModal = ({ isOpen, onClose, course }) => {
   const { authToken } = useSelector((state) => state.auth);
@@ -39,7 +40,11 @@ const CourseModal = ({ isOpen, onClose, course }) => {
                 description: `Enroll for ${course.course_name}`,
                 failure_reason,
             },
-            { withCredentials: true }
+            {
+              headers: {
+                Authorization: `Bearer ${Cookies.get('accessToken')}}`,
+              },
+            }
           );
 
           if (status === "success") {
@@ -89,12 +94,20 @@ const CourseModal = ({ isOpen, onClose, course }) => {
           receipt: `receipt_${Date.now()}`,
           course_id: course.id,
         },
-        { withCredentials: true }
+        { 
+          headers: {
+            Authorization: `Bearer ${Cookies.get('accessToken')}}`,
+          },
+        }
       );
 
       const userResponse = await axios.get(
         `${process.env.REACT_APP_API_ROUTE}/users/profile`,
-        { withCredentials: true }
+        { 
+          headers: {
+            Authorization: `Bearer ${Cookies.get('accessToken')}}`,
+          },
+        }
       );
 
       initializePayment(paymentResponse.data.order_id, userResponse.data);
